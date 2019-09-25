@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "strict": true,
+        "alwaysStrict": true,
+        "declaration": false,
+        "module": "none",
+        "jsx": "react",
+        "jsxFactory": "JsxHtml.createElement"
+    },
+    "files": [
+        "tests.tsx"
+    ]
+}

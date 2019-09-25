@@ -1,0 +1,12 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "strict": true,
+        "alwaysStrict": true,
+        "declaration": false,
+        "module": "none",
+    },
+    "files": [
+        "ts-jsx-html.ts"
+    ]
+}
