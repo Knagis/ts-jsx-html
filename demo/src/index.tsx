@@ -1,8 +1,11 @@
-/// <reference path="../lib/ts-jsx-html.d.ts" />
+import "jsx-dom-lite"; // https://github.com/microsoft/TypeScript/issues/40501
+
+import { Counter } from "./Counter";
 
 function runTests() {
-    let keys = Object.keys(JsxHtmlTests);
     let container = document.getElementById("test-container")!;
+
+    let keys = Object.keys(JsxHtmlTests);
     for (let i = 0; i < keys.length; i++) {
         let k = keys[i];
         console.log("Running test", k);
@@ -20,26 +23,22 @@ function Table(props: { count: number }) {
     return <table><tr>{cells}</tr></table>
 }
 
-function Foo(props: {}, children: JSX.Element[]) {
-    return <div style={{border: "2px solid black"}}>
+function Foo({ children }: { children?: JSX.Element[] }) {
+    return <div style={{ border: "2px solid black" }}>
         {children}
         <Table count={11} />
     </div>
 }
 
 const JsxHtmlTests: { [name: string]: () => JSX.Element } = {
-    directCallWithoutJsx: () => {
-        return JsxHtml.createElement("div", {}, "foo");
-    },
-
     simpleColoredDiv: () => {
-        let a = <div >foo</div>;
+        let a = <div>foo</div>;
         a.style.color = "blue";
         return a;
     },
 
     inlineStyleAttributes: () => {
-        return <div style={{ color: "red" }}>foo</div>
+        return <div style={{ color: "red" }} className="cl1">foo</div>
     },
 
     imageSource: () => {
@@ -50,11 +49,12 @@ const JsxHtmlTests: { [name: string]: () => JSX.Element } = {
 
     nestedElements: () => {
         const width: HTMLSpanElement = <span></span>;
-        const div = <div>This is <strong>the width</strong>: {width}</div>;
+        let strong: HTMLElement;
+        const div = <div>This is {strong = <strong>the width</strong>}: {width}</div>;
 
         div.style.background = "#eee";
         div.appendChild(<span>!</span>);
-        setTimeout(() => { width.textContent = div.clientWidth + "px"; });
+        setTimeout(() => { width.textContent = strong.offsetWidth + "px"; });
 
         return div;
     },
@@ -63,7 +63,7 @@ const JsxHtmlTests: { [name: string]: () => JSX.Element } = {
         return <Table count={6}></Table>;
     },
     table9: () => {
-        return <Table count={6}></Table>;
+        return <Table count={9}></Table>;
     },
 
     nestedComponent: () => {
