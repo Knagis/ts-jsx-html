@@ -1,8 +1,8 @@
 import { jsx as _jsx } from "./jsx-runtime.js";
-import "./jsx-dom-lite.js"; // https://github.com/microsoft/TypeScript/issues/40501
+/* @jsxImportSource jsx-dom-lite */
 export function Counter(props) {
     let value = props.initial;
-    const elem = _jsx("strong", { children: value }, void 0);
+    const elem = _jsx("strong", { children: value });
     return {
         dom: elem,
         inc: () => {

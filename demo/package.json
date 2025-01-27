@@ -1,15 +1,13 @@
 {
     "license": "MIT",
-
     "scripts": {
         "build": "tsc -p . && node scripts/convert-imports.js",
         "web": "npx http-server -c-1"
     },
-
     "dependencies": {
         "jsx-dom-lite": "link:../"
     },
     "devDependencies": {
-        "typescript": "next"
+        "typescript": "^5.7.3"
     }
 }

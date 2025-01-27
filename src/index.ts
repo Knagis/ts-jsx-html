@@ -1,12 +1,18 @@
+export function jsx<P, R extends HTMLElement>(type: ((props: P) => R), props: P, key?: string): R;
+export function jsx<K extends keyof HTMLElementTagNameMap>(type: K, props: any, key?: string): HTMLElementTagNameMap[K];
+export function jsx(type: string, props: any, key?: string): HTMLElement;
 export function jsx(type: string | ((props: any) => HTMLElement), props: any, key?: string) {
     if (typeof type === "function") {
         return (type as any)(props, key);
     }
 
     const element = document.createElement(type);
+    let ref: undefined | ((node: any) => void);
     for (const attrName of Object.keys(props)) {
         const value = props[attrName as keyof typeof props];
-        if (attrName === "children") {
+        if (attrName === "ref") {
+            ref = value;
+        } else if (attrName === "children") {
             appendChild(element, value);
         } else if (attrName === "className") {
             element.className = value;
@@ -18,6 +24,8 @@ export function jsx(type: string | ((props: any) => HTMLElement), props: any, ke
             element.setAttribute(attrName, value as any);
         }
     }
+
+    ref?.(element);
 
     return element;
 }
@@ -42,32 +50,38 @@ function appendChild(container: HTMLElement, child: any) {
     }
 }
 
-// needs to be `declare global` due to
-// https://github.com/microsoft/TypeScript/issues/41118
-declare global {
-    export namespace JSX {
-        type Element = HTMLElement;
+export namespace JSX {
+    export type Element = HTMLElement;
 
-        type IfEquals<X, Y, A = X, B = never> =
-            (<T>() => T extends X ? 1 : 2) extends
-            (<T>() => T extends Y ? 1 : 2) ? A : B;
+    type IfEquals<X, Y, A = X, B = never> =
+        (<T>() => T extends X ? 1 : 2) extends
+        (<T>() => T extends Y ? 1 : 2) ? A : B;
 
-        type ReadonlyKeys<T> = {
-            [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, never, P>
-        }[keyof T];
+    type ReadonlyKeys<T> = {
+        [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, never, P>
+    }[keyof T];
 
-        type RemoveFunctions<T> = {
-            [Key in keyof T]: T[Key] extends Function ? never : Key
-        }[keyof T];
+    type RemoveFunctions<T> = {
+        [Key in keyof T]: T[Key] extends Function ? never : Key
+    }[keyof T];
 
-        type OptionalAttributes<T extends Element> = {
-            [Key in "style" | Exclude<RemoveFunctions<T>, ReadonlyKeys<T>>]?: Partial<T[Key]>;
-        };
+    type IncludedAttributes = "style";
 
-        type IntrinsicElements1 = {
-            [TagName in keyof HTMLElementTagNameMap]?: OptionalAttributes<HTMLElementTagNameMap[TagName]>;
-        }
+    type ExcludedAttributes = "outerHTML" | "outerText";
 
-        export type IntrinsicElements = IntrinsicElements1;
+    type OptionalAttributes<T extends Element> = {
+        [Key in IncludedAttributes | Exclude<Exclude<RemoveFunctions<T>, ExcludedAttributes>, ReadonlyKeys<T>>]?: Partial<T[Key]>;
+    } & {
+        ref?: (node: T) => void;
+    };
+
+    type IntrinsicElements1 = {
+        [TagName in keyof HTMLElementTagNameMap]?: OptionalAttributes<HTMLElementTagNameMap[TagName]>;
     }
+
+    type IntrinsicElements2 = {
+        [P: string]: OptionalAttributes<HTMLElement>;
+    }
+    
+    export type IntrinsicElements = IntrinsicElements1 & IntrinsicElements2;
 }

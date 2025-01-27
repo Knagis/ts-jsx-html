@@ -1,7 +1,7 @@
 {
     "name": "jsx-dom-lite",
     "license": "MIT",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "main": "jsx-runtime/index.js",
     "types": "jsx-runtime/index.d.ts",
     "scripts": {
@@ -9,6 +9,7 @@
         "build": "tsc -p src"
     },
     "devDependencies": {
-        "typescript": "beta"
-    }
+        "typescript": "^5.7.3"
+    },
+    "packageManager": "yarn@4.6.0"
 }

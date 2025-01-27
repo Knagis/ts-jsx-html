@@ -1,13 +1,15 @@
-import "jsx-dom-lite"; // https://github.com/microsoft/TypeScript/issues/40501
+/* @jsxImportSource jsx-dom-lite */
 
 import { Counter } from "./Counter";
 
 function runTests() {
     let container = document.getElementById("test-container")!;
 
-    let keys = Object.keys(JsxHtmlTests);
-    for (let i = 0; i < keys.length; i++) {
-        let k = keys[i];
+    const counter = Counter({ initial: 1 });
+    container.appendChild(counter.dom);
+    setInterval(() => { counter.inc(); }, 1000);
+
+    for (const k of Object.keys(JsxHtmlTests)) {
         console.log("Running test", k);
 
         container.appendChild(<h2>{k}</h2>);
@@ -23,14 +25,14 @@ function Table(props: { count: number }) {
     return <table><tr>{cells}</tr></table>
 }
 
-function Foo({ children }: { children?: JSX.Element[] }) {
+function Foo({ children }: { children?: HTMLElement[] }) {
     return <div style={{ border: "2px solid black" }}>
         {children}
         <Table count={11} />
     </div>
 }
 
-const JsxHtmlTests: { [name: string]: () => JSX.Element } = {
+const JsxHtmlTests: { [name: string]: () => HTMLElement } = {
     simpleColoredDiv: () => {
         let a = <div>foo</div>;
         a.style.color = "blue";

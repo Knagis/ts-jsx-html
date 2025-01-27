@@ -1,4 +1,4 @@
-import "jsx-dom-lite"; // https://github.com/microsoft/TypeScript/issues/40501
+/* @jsxImportSource jsx-dom-lite */
 
 export function Counter(props: { initial: number; }) {
     let value = props.initial;
