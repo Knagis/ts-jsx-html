@@ -6,10 +6,7 @@ export function jsx(type, props, key) {
     let ref;
     for (const attrName of Object.keys(props)) {
         const value = props[attrName];
-        if (attrName === "ref") {
-            ref = value;
-        }
-        else if (attrName === "children") {
+        if (attrName === "children") {
             appendChild(element, value);
         }
         else if (attrName === "className") {
@@ -25,7 +22,6 @@ export function jsx(type, props, key) {
             element.setAttribute(attrName, value);
         }
     }
-    ref === null || ref === void 0 ? void 0 : ref(element);
     return element;
 }
 export const jsxs = jsx;

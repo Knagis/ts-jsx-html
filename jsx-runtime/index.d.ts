@@ -19,8 +19,6 @@ export declare namespace JSX {
     type ExcludedAttributes = "outerHTML" | "outerText";
     type OptionalAttributes<T extends Element> = {
         [Key in IncludedAttributes | Exclude<Exclude<RemoveFunctions<T>, ExcludedAttributes>, ReadonlyKeys<T>>]?: Partial<T[Key]>;
-    } & {
-        ref?: (node: T) => void;
     };
     type IntrinsicElements1 = {
         [TagName in keyof HTMLElementTagNameMap]?: OptionalAttributes<HTMLElementTagNameMap[TagName]>;

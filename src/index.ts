@@ -10,9 +10,7 @@ export function jsx(type: string | ((props: any) => HTMLElement), props: any, ke
     let ref: undefined | ((node: any) => void);
     for (const attrName of Object.keys(props)) {
         const value = props[attrName as keyof typeof props];
-        if (attrName === "ref") {
-            ref = value;
-        } else if (attrName === "children") {
+        if (attrName === "children") {
             appendChild(element, value);
         } else if (attrName === "className") {
             element.className = value;
@@ -24,8 +22,6 @@ export function jsx(type: string | ((props: any) => HTMLElement), props: any, ke
             element.setAttribute(attrName, value as any);
         }
     }
-
-    ref?.(element);
 
     return element;
 }
@@ -71,8 +67,6 @@ export namespace JSX {
 
     type OptionalAttributes<T extends Element> = {
         [Key in IncludedAttributes | Exclude<Exclude<RemoveFunctions<T>, ExcludedAttributes>, ReadonlyKeys<T>>]?: Partial<T[Key]>;
-    } & {
-        ref?: (node: T) => void;
     };
 
     type IntrinsicElements1 = {
